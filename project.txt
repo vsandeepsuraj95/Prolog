@@ -1,0 +1,134 @@
+player(1,2,h).
+player(1,7,d).
+player(2,6,d).
+player(2,3,d).
+river(4,d).
+river(2,d).
+river(6,d).
+river(5,h).
+river(3,c).
+
+
+pair(X,Y):-player(X,Y,Z),player(X,Y,W),Z!=W .
+pair(X,Y):-player(X,Y,_),river(Y,_).
+two_pair(X,Y):- pair(X,Y),pair(X,Z),Y>Z.
+three_kind(X,Y):-river(Y,Q),river(Y,R),player(X,Y,_),Q!=R.
+three_kind(X,Y):-river(Y,_),player(X,Y,Q),player(X,Y,R),Q!=R.
+four_kind(X,Y):-river(Y,Q),river(Y,R),river(Y,S),player(X,Y,_),Q!=R,R!=S,Q!=S.
+four_kind(X,Y):-river(Y,Q),river(Y,R),player(X,Y,S),player(X,Y,T),Q!=R,T!=S.
+flush(X,Y):-river(W,S),river(Y,S),river(Z,S),player(X,U,S),player(X,V,S),W!=Y,W!=Z,Y!=Z,U!=V,Y>W,Y>Z,Y>U,Y>V.
+flush(X,Y):-river(W,S),river(U,S),river(Z,S),player(X,Y,S),player(X,V,S),W!=U,W!=Z,U!=Z,Y!=V,Y>W,Y>Z,Y>U,Y>V.
+flush(X,Y):-river(W,S),river(Y,S),river(Z,S),river(U,S),player(X,V,S),W!=Y,W!=Z,W!=U,Y!=Z,Y!=U,Z!=U,Y>W,Y>Z,Y>U,Y>V.
+flush(X,Y):-river(W,S),river(V,S),river(Z,S),river(U,S),player(X,Y,S),W!=V,W!=Z,W!=U,V!=Z,V!=U,Z!=U,Y>W,Y>Z,Y>U,Y>V.
+full_house(X,Y):-pair(X,Z),three_kind(X,Y),Y!=Z.
+
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,W<Z,W<U,W<V,
+U=W+1,V=W+2,Z=W+3,Y=W+4.
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,W<Z,W<U,W<V,
+U=W+1,V=W+3,Z=W+2,Y=W+4.
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,W<Z,W<U,W<V,
+U=W+2,V=W+3,Z=W+1,Y=W+4.
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,U<Z,U<W,U<V,
+W=U+2,V=U+1,Z=U+3,Y=U+4.
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,U<Z,U<W,U<V,
+W=U+1,V=U+2,Z=U+3,Y=U+4.
+
+straight(X,Y):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,Y>W,Y>Z,Y>U,Y>V,U<Z,U<W,U<V,
+W=U+2,V=U+3,Z=U+1,Y=U+4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,U<Z,U<W,U<Y,
+W=U+2,Y=U+1,Z=U+3,V=U+4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W<Z,W<Y,W<U,
+Y=W+2,Z=W+1,U=W+3,V=W+4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W<Z,W<Y,W<U,
+Y=W+2,Z=W+3,U=W+1,V=W+4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),player(X,V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W<Z,W<Y,W<U,
+Y=W+3,Z=W+1,U=W+2,V=W+4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),river(V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W=V-1,Y=V-2,Z=V-3,U=V-4.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),river(V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W=V-1,Y=V-2,Z=V-4,U=V-3.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),river(V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W=V-1,Y=V-4,Z=V-3,U=V-2.
+
+straight(X,V):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),river(V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,V>U,V>Y,W=V-4,Y=V-2,Z=V-3,U=V-1.
+
+straight(X,U):-river(W,_),river(Y,_),river(Z,_),player(X,U,_),river(V,_),W!=Y,W!=Z,W!=U,W!=V,Y!=Z,Y!=U,Y!=V,Z!=U,Z!=V,U!=V,V>W,V>Z,U>V,V>Y,W=V-1,Y=V-2,Z=V-3,U=V+1.
+
+straight_flush(X,Y):-straight(X,Y),flush(X,Y).
+
+hand(X,high_card,Y):-not straight_flush(X,Y),not four_kind(X,Y),not full_house(X,Y),not flush(X,Y),not straight(X,Y),not three_kind(X,Y),not two_pair(X,Y),not pair(X,Y),
+player(X,Y,_),player(X,Z,_),Y>Z,Y!=Z.
+hand(X,pair,Y):-not straight_flush(X,_),not four_kind(X,_),not full_house(X,_),not flush(X,_),not straight(X,_),not three_kind(X,_),not two_pair(X,_),pair(X,Y).
+hand(X,two_pair,Y):-not straight_flush(X,_),not four_kind(X,_),not full_house(X,_),not flush(X,_),not straight(X,_),not three_kind(X,_),two_pair(X,Y).
+hand(X,three_kind,Y):-not straight_flush(X,_),not four_kind(X,_),not full_house(X,_),not flush(X,_),not straight(X,_),three_kind(X,Y).
+hand(X,straight,Y):-not straight_flush(X,_),not four_kind(X,_),not full_house(X,_),not flush(X,_),straight(X,Y).
+hand(X,flush,Y):-not straight_flush(X,_),not four_kind(X,_),not full_house(X,_),flush(X,Y).
+hand(X,full_house,Y):-not straight_flush(X,_),not four_kind(X,_),full_house(X,Y).
+hand(X,four_kind,Y):-not straight_flush(X,_),four_kind(X,Y).
+hand(X,straight_flush,Y):-straight_flush(X,Y).
+
+successor(1,13).
+successor(13,12).
+successor(12,11).
+successor(11,10).      
+successor(10,9).         
+successor(9,8).
+successor(8,7).          
+successor(7,6).          
+successor(6,5).
+successor(5,4).          
+successor(4,3).          
+successor(3,2).
+
+successor(1,1).
+successor(13,13).
+successor(12,12).
+successor(11,11).      
+successor(10,10).         
+successor(9,9).
+successor(8,8).          
+successor(7,7).          
+successor(6,6).
+successor(5,5).          
+successor(4,4).          
+successor(3,3).
+successor(2,2).
+
+successor(straight_flush, four_kind).
+successor(four_kind, full_house).
+successor(full_house, straight).
+successor(straight, flush).               
+successor(flush, three_kind).
+successor(three_kind, two_pair).     
+successor(two_pair, pair).
+successor(pair, high_card).
+
+greater_value(A,B) :- successor(A,B).
+greater_value(A,B) :- successor(A,X) , greater_value(X,B).
+
+winner(X):-hand(X,U,_),hand(Y,V,_),X!=Y,U!=V,not greater_value(V,X).
+winner(X):-hand(X,U,A),hand(Y,V,B),X!=Y,U=V,not greater_value(B,A).
+
+draw(draw):-not winner(_).
+
+#show straight/2.
+#show river/2.
+#show player/3.
+#show pair/2.
+#show flush/2.
+#show full_house/2.
+#show three_kind/2.
+#show four_kind/2.
+#show two_pair/2.
+#show hand/3.
+#show winner/1.
+%#show greater_value/2.
